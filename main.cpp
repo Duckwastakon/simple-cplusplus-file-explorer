@@ -118,6 +118,24 @@ int combine(std::string extention)
     return 0;
 }
 
+int delEmpty()
+{
+    if (std::filesystem::exists(std::filesystem::current_path()) && std::filesystem::is_directory(std::filesystem::current_path()))
+    {
+        for (const auto &entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
+        {
+            if (std::filesystem::is_empty(entry.path()))
+            {
+                std::cout << "removed file " << entry.path() << "\n";
+                std::filesystem::remove(entry.path());
+            }
+        }
+        std::cout << "succesfully removed the empty files\n";
+    }
+
+    return 0;
+}
+
 int main()
 {
     std::cout << "File system tools started. Type 'help' for a list of comands.\n";
@@ -157,6 +175,7 @@ int main()
                       << "'new <fileName>': creates a new file\n"
                       << "'rename <fileName, newFileName>': renames the chosen file or directory to the new name\n"
                       << "'del <delPath>': deletes the chosen file or directory\n"
+                      << "'delempt': deletes all the files from the current directory which are empty\n"
                       << "'combine <fileExtention>': combines all the files with the given extention into a folder\n"
                       << "'exit': ends the program\n";
         }
@@ -233,6 +252,10 @@ int main()
             {
                 std::cout << "missing argument\n";
             }
+        }
+        else if (command == "delempt")
+        {
+            delEmpty();
         }
         else if (command == "exit")
         {

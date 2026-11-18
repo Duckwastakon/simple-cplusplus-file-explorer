@@ -1,0 +1,9 @@
+# Simple c++ file explorer
+
+This is a very simple file explorer made as my first ever c++ project.
+the project allows you to do a load of commands listed below in a terminal to interact with your files and to clean them up.
+
+## all commands:
+1) 'help': Shows a list of commands
+2) ''
+
