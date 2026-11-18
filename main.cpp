@@ -23,7 +23,9 @@ int upDirectory()
     {
         std::filesystem::current_path(std::filesystem::current_path().parent_path());
         std::cout << "new directory: " << std::filesystem::current_path() << "\n";
-    }else{
+    }
+    else
+    {
         std::cout << "no parent directory\n";
     }
     return 0;
@@ -78,13 +80,39 @@ int rename(std::string fileName, std::string newFileName)
 
 int deleteChosen(std::string fileName)
 {
-    if (std::filesystem::remove(fileName))
+    if (std::filesystem::is_directory(fileName))
+    {
+        std::filesystem::remove_all(fileName);
+        std::cout << fileName + " deleted\n";
+    }
+    else if (std::filesystem::remove(fileName))
     {
         std::cout << fileName + " deleted\n";
     }
     else
     {
         std::cout << fileName + " not found\n";
+    }
+
+    return 0;
+}
+
+int combine(std::string extention)
+{
+    if (std::filesystem::exists(std::filesystem::current_path()) && std::filesystem::is_directory(std::filesystem::current_path()))
+    {
+        createNewFolder(extention);
+        for (const auto &entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
+        {
+            if (entry.path().extension() == extention)
+            {
+                std::filesystem::rename(entry.path().filename(), extention / entry.path().filename());
+            }
+        }
+    }
+    else
+    {
+        std::cout << "directory does not exsist \n";
     }
 
     return 0;
@@ -129,6 +157,7 @@ int main()
                       << "'new <fileName>': creates a new file\n"
                       << "'rename <fileName, newFileName>': renames the chosen file or directory to the new name\n"
                       << "'del <delPath>': deletes the chosen file or directory\n"
+                      << "'combine <fileExtention>': combines all the files with the given extention into a folder\n"
                       << "'exit': ends the program\n";
         }
         else if (command == "dir")
@@ -157,7 +186,8 @@ int main()
                 std::cout << "missing argument\n";
             }
         }
-        else if (command == "updir"){
+        else if (command == "updir")
+        {
             upDirectory();
         }
         else if (command == "new")
@@ -187,6 +217,17 @@ int main()
             if (words.size() >= 2)
             {
                 deleteChosen(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "combine")
+        {
+            if (words.size() >= 2)
+            {
+                combine(words[1]);
             }
             else
             {
