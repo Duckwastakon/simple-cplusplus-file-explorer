@@ -17,14 +17,30 @@ int changeDirectory(std::string directoryName)
     return 0;
 }
 
+int upDirectory()
+{
+    if (std::filesystem::current_path().has_parent_path())
+    {
+        std::filesystem::current_path(std::filesystem::current_path().parent_path());
+        std::cout << "new directory: " << std::filesystem::current_path() << "\n";
+    }else{
+        std::cout << "no parent directory\n";
+    }
+    return 0;
+}
+
 int readDirectory()
 {
     if (std::filesystem::exists(std::filesystem::current_path()) && std::filesystem::is_directory(std::filesystem::current_path()))
     {
-        std::cout << "Content in: " << std::filesystem::current_path() << "\n";
+        std::cout << "Content in " << std::filesystem::current_path() << ":\n";
         for (const auto &entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
         {
-            std::cout << entry.path() << "\n";
+            std::cout << entry.path().filename() << "\n";
+        }
+        if (std::filesystem::current_path().empty())
+        {
+            std::cout << "This directory is empty\n";
         }
     }
     else
@@ -47,6 +63,7 @@ int createNewFile(std::string fileName)
     std::ofstream newFile(fileName);
     newFile << "New file created named " + fileName + "\n";
     newFile.close();
+    std::cout << fileName << " created\n";
 
     return 0;
 }
@@ -108,6 +125,7 @@ int main()
                       << "'dir': shows the current directory\n"
                       << "'newdir <dirName>': creates a new directory in the curret one\n"
                       << "'cdir <dirName>': change the directory to one that the current directory contains\n"
+                      << "'updir': go up one directory if possible\n"
                       << "'new <fileName>': creates a new file\n"
                       << "'rename <fileName, newFileName>': renames the chosen file or directory to the new name\n"
                       << "'del <delPath>': deletes the chosen file or directory\n"
@@ -138,6 +156,9 @@ int main()
             {
                 std::cout << "missing argument\n";
             }
+        }
+        else if (command == "updir"){
+            upDirectory();
         }
         else if (command == "new")
         {
@@ -176,7 +197,9 @@ int main()
         {
             std::cout << "file system exited";
             break;
-        }else{
+        }
+        else
+        {
             std::cout << "command not recognized, get a list of commands from 'help'\n";
         }
     }
