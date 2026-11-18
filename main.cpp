@@ -62,7 +62,9 @@ int createNewFolder(std::string folderName)
 
 int createNewFile(std::string fileName)
 {
-    std::ofstream newFile(fileName);
+    std::fstream newFile;
+
+    newFile.open(fileName);
     newFile << "New file created named " + fileName + "\n";
     newFile.close();
     std::cout << fileName << " created\n";
@@ -136,6 +138,66 @@ int delEmpty()
     return 0;
 }
 
+int editTxtFile(std::string fileName)
+{
+    std::ofstream file(fileName);
+    std::cout << "Now editing file " << fileName << "\n"
+              << "type 'exit': to exit \n"
+              << "type 'add <msg>': to add new line to text file\n";
+
+    std::string inputLine;
+
+    while (true)
+    {
+        if (!std::getline(std::cin, inputLine, '\n'))
+        {
+            std::cout << "file system exited";
+            break;
+        };
+
+        std::stringstream ss(inputLine);
+        std::vector<std::string> words;
+        std::string word;
+
+        while (ss >> word)
+        {
+            words.push_back(word);
+        }
+
+        if (words.empty())
+        {
+            continue;
+        }
+
+        const std::string command = words[0];
+
+        if (command == "exit")
+        {
+            break;
+        }
+        else if (command == "add")
+        {
+            if (words.size() >= 2)
+            {
+                for (int i = 1; i < words.size(); i++)
+                {
+                    file << words[i];
+                }
+                file << "\n";
+
+                std::cout << "msg placed\n";
+            }
+            else
+            {
+                std::cout << "Missing input\n";
+            }
+        }
+    }
+    std::cout << "stopped edditing " << fileName << "\n";
+    file.close();
+    return 0;
+}
+
 int main()
 {
     std::cout << "File system tools started. Type 'help' for a list of comands.\n";
@@ -177,6 +239,7 @@ int main()
                       << "'del <delPath>': deletes the chosen file or directory\n"
                       << "'delempt': deletes all the files from the current directory which are empty\n"
                       << "'combine <fileExtention>': combines all the files with the given extention into a folder\n"
+                      << "'edit <fileName>': go in to editing mode for a txt file\n"
                       << "'exit': ends the program\n";
         }
         else if (command == "dir")
@@ -247,6 +310,17 @@ int main()
             if (words.size() >= 2)
             {
                 combine(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "edit")
+        {
+            if (words.size() >= 2)
+            {
+                editTxtFile(words[1]);
             }
             else
             {

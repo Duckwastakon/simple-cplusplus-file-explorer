@@ -1,9 +1,30 @@
 # Simple c++ file explorer
 
 This is a very simple file explorer made as my first ever c++ project.
-the project allows you to do a load of commands listed below in a terminal to interact with your files and to clean them up.
+the project allows you to do a load of commands listed below in a terminal to interact with your files and to clean them up. For me the combine command is especially useful as I can move all of my downloaded pictures into one folder instantly.
+
+<b>Do be careful to not delete any important files</b>
 
 ## all commands:
 1) 'help': Shows a list of commands
-2) ''
+2) "'dir': shows the current directory"
+3) "'newdir <dirName>': creates a new directory in the curret one"
+4) "'cdir <dirName>': change the directory to one that the current directory contains"
+5) "'updir': go up one directory if possible"
+6) << "'new <fileName>': creates a new file"
+7) << "'rename <fileName, newFileName>': renames the chosen file or directory to the new name"
+8) << "'del <delPath>': deletes the chosen file or directory"
+9) << "'delempt': deletes all the files from the current directory which are empty"
+10) << "'combine <fileExtention>': combines all the files with the given extention into a folder"
+11) << "'edit <fileName>': go in to editing mode for a txt file"
+12) << "'exit': ends the program";
 
+## How to build the project yourself:
+1) download `main.cpp`
+2) You will need to have c++ compiler, I use g++
+3) In the console search to the downloaded files folder
+4) run the command ```g++ main.cpp -o main``` to compile the project
+5) run the .exe file ```./main```
+
+## Link to video deme
+<a href="">video link</a>
