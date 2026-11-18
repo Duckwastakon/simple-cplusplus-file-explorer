@@ -62,9 +62,7 @@ int createNewFolder(std::string folderName)
 
 int createNewFile(std::string fileName)
 {
-    std::fstream newFile;
-
-    newFile.open(fileName);
+    std::ofstream newFile(fileName);
     newFile << "New file created named " + fileName + "\n";
     newFile.close();
     std::cout << fileName << " created\n";
@@ -140,7 +138,9 @@ int delEmpty()
 
 int editTxtFile(std::string fileName)
 {
-    std::ofstream file(fileName);
+    std::fstream file;
+    file.open(fileName);
+
     std::cout << "Now editing file " << fileName << "\n"
               << "type 'exit': to exit \n"
               << "type 'add <msg>': to add new line to text file\n";

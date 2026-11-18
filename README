@@ -19,6 +19,9 @@ the project allows you to do a load of commands listed below in a terminal to in
 11) << "'edit <fileName>': go in to editing mode for a txt file"
 12) << "'exit': ends the program";
 
+## Link to download demo
+<a href="https://github.com/Duckwastakon/simple-cplusplus-file-explorer/releases/tag/demo">click here to download demo</a>
+
 ## How to build the project yourself:
 1) download `main.cpp`
 2) You will need to have c++ compiler, I use g++
@@ -26,5 +29,5 @@ the project allows you to do a load of commands listed below in a terminal to in
 4) run the command ```g++ main.cpp -o main``` to compile the project
 5) run the .exe file ```./main```
 
-## Link to video deme
-<a href="">video link</a>
+## Link to video demo
+<a href="https://youtu.be/iFf1bBsswyo">video link</a>
