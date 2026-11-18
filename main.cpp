@@ -1,12 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <vector>
 
-int changeDirectory()
+int changeDirectory(std::string directoryName)
 {
-    std::string directoryName;
-    std::cout << "Enter directory name\n";
-    std::cin >> directoryName;
     if (std::filesystem::exists(directoryName) && std::filesystem::is_directory(directoryName))
     {
         std::filesystem::current_path(directoryName);
@@ -19,12 +17,12 @@ int changeDirectory()
     return 0;
 }
 
-int readDirectory(std::filesystem::path chosenDirectory)
+int readDirectory()
 {
-    if (std::filesystem::exists(chosenDirectory) && std::filesystem::is_directory(chosenDirectory))
+    if (std::filesystem::exists(std::filesystem::current_path()) && std::filesystem::is_directory(std::filesystem::current_path()))
     {
-        std::cout << "directory content: \n";
-        for (const auto &entry : std::filesystem::directory_iterator(chosenDirectory))
+        std::cout << "Content in: " << std::filesystem::current_path() << "\n";
+        for (const auto &entry : std::filesystem::directory_iterator(std::filesystem::current_path()))
         {
             std::cout << entry.path() << "\n";
         }
@@ -37,53 +35,32 @@ int readDirectory(std::filesystem::path chosenDirectory)
     return 0;
 }
 
-int createNewFolder()
+int createNewFolder(std::string folderName)
 {
-    std::cout << "creating new folder\n";
-
-    std::string folderName;
-    std::cout << "enter new folder name\n";
-    std::cin >> folderName;
-
     std::filesystem::create_directory(folderName);
-    std::cout << "new folder created " + folderName + "\n";
+    std::cout << "new directory created " + folderName + "\n";
     return 0;
 }
 
-int createNewFile()
+int createNewFile(std::string fileName)
 {
-    std::cout << "creating new file\n";
-
-    std::string fileName;
-    std::cout << "enter new file name\n";
-    std::cin >> fileName;
-
     std::ofstream newFile(fileName);
-
     newFile << "New file created named " + fileName + "\n";
-
     newFile.close();
 
     return 0;
 }
 
-int renameFile(){
-    std::cout << "choose file you want to rename";
-    std::string fileName;
-    std::string newFileName;
-    std::cin >> fileName;
-    std::cin >> newFileName;
-
+int rename(std::string fileName, std::string newFileName)
+{
     std::filesystem::rename(fileName, newFileName);
+    std::cout << "succesfully renamed " << fileName << " to " << newFileName << "\n";
 
     return 0;
 }
 
-int deleteFile()
+int deleteChosen(std::string fileName)
 {
-    std::string fileName;
-    std::cout << "Enter file name to delete\n";
-    std::cin >> fileName;
     if (std::filesystem::remove(fileName))
     {
         std::cout << fileName + " deleted\n";
@@ -98,13 +75,110 @@ int deleteFile()
 
 int main()
 {
-    createNewFile();
-    renameFile();
+    std::cout << "File system tools started. Type 'help' for a list of comands.\n";
+
+    std::string inputLine;
     while (true)
     {
-        std::cout << "current directory " << std::filesystem::current_path() << "\n";
-        changeDirectory();
-        readDirectory(std::filesystem::current_path());
+        if (!std::getline(std::cin, inputLine, '\n'))
+        {
+            std::cout << "file system exited";
+            break;
+        };
+
+        std::stringstream ss(inputLine);
+        std::vector<std::string> words;
+        std::string word;
+
+        while (ss >> word)
+        {
+            words.push_back(word);
+        }
+
+        if (words.empty())
+        {
+            continue;
+        }
+
+        const std::string command = words[0];
+
+        if (command == "help")
+        {
+            std::cout << "Here is a list of commands:\n"
+                      << "'dir': shows the current directory\n"
+                      << "'newdir <dirName>': creates a new directory in the curret one\n"
+                      << "'cdir <dirName>': change the directory to one that the current directory contains\n"
+                      << "'new <fileName>': creates a new file\n"
+                      << "'rename <fileName, newFileName>': renames the chosen file or directory to the new name\n"
+                      << "'del <delPath>': deletes the chosen file or directory\n"
+                      << "'exit': ends the program\n";
+        }
+        else if (command == "dir")
+        {
+            readDirectory();
+        }
+        else if (command == "newdir")
+        {
+            if (words.size() >= 2)
+            {
+                createNewFolder(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "cdir")
+        {
+            if (words.size() >= 2)
+            {
+                changeDirectory(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "new")
+        {
+            if (words.size() >= 2)
+            {
+                createNewFile(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "rename")
+        {
+            if (words.size() >= 3)
+            {
+                rename(words[1], words[2]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "del")
+        {
+            if (words.size() >= 2)
+            {
+                deleteChosen(words[1]);
+            }
+            else
+            {
+                std::cout << "missing argument\n";
+            }
+        }
+        else if (command == "exit")
+        {
+            std::cout << "file system exited";
+            break;
+        }else{
+            std::cout << "command not recognized, get a list of commands from 'help'\n";
+        }
     }
     return 0;
 }
